@@ -753,3 +753,4 @@ dist
 build
 tmp
 !tmp/.gitkeep
+public/js
