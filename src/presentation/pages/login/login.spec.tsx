@@ -9,4 +9,10 @@ describe('Login component', () => {
     const errorWrap = getByTestId('error-wrap')
     expect(errorWrap.childElementCount).toBe(0)
   })
+
+  test('Should button start with disabled state', () => {
+    const { getByTestId } = render(<Login/>)
+    const submitButton = getByTestId('submit-button') as HTMLButtonElement
+    expect(submitButton.disabled).toBe(true)
+  })
 })
