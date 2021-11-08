@@ -75,19 +75,5 @@ button {
     .submit {
       margin-top: 32px;
     }
-
-    .errorWrap {
-      display: flex;
-      flex-direction: column;
-
-      .spinner {
-        margin-top: 30px;
-      }
-
-      .error {
-        margin-top: 30px;
-        color: $primaryLight;
-      }
-    }
   }
 }
