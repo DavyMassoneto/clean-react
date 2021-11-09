@@ -1,10 +1,18 @@
 import React from 'react'
+import * as Yup from 'yup'
 
 type FormContextType = {
   isLoading: boolean
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
   errorMessage: string
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>
+  errors: { [key: string]: string }
+  setErrors: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>
+  rules: Yup.ObjectSchema<any>
+}
+
+type FormContextProviderProps = {
+  rules: Yup.ObjectSchema<any>
 }
 
 const FormContext = React.createContext<FormContextType>(undefined)
@@ -17,18 +25,22 @@ const useFormContext = (): FormContextType => {
   return context
 }
 
-const FormContextProvider: React.FC = ({ children }) => {
+const FormContextProvider: React.FC<FormContextProviderProps> = ({ children, rules }) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const [errorMessage, setErrorMessage] = React.useState('')
+  const [errors, setErrors] = React.useState<{ [key: string]: string }>({})
 
   const value = React.useMemo(() => {
     return {
       isLoading,
       setIsLoading,
       errorMessage,
-      setErrorMessage
+      setErrorMessage,
+      errors,
+      setErrors,
+      rules
     }
-  }, [isLoading, errorMessage])
+  }, [isLoading, errorMessage, errors])
 
   return (
     <FormContext.Provider value={value}>
