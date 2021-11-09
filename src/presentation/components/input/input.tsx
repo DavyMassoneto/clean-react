@@ -17,7 +17,7 @@ const Input: React.FC<Props> = (props: Props) => {
     const { name, value } = event.target
 
     setFields(oldValue => ({ ...oldValue, [name]: value }))
-    validation.validate({ [name]: value })
+    validation.validate(name, value)
   }
 
   return (
