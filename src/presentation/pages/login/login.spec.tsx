@@ -1,5 +1,6 @@
 import React from 'react'
 import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react'
+import faker from 'faker'
 
 import { ValidationSpy } from '@/presentation/test'
 
@@ -48,16 +49,18 @@ describe('Login component', () => {
   test('Should call Validation with correct email', () => {
     const { sut, validationSpy } = makeSut()
     const emailInput = sut.getByTestId('email-input') as HTMLInputElement
-    fireEvent.input(emailInput, { target: { value: 'any_value' } })
+    const email = faker.internet.email()
+    fireEvent.input(emailInput, { target: { value: email } })
     expect(validationSpy.fieldName).toEqual('email')
-    expect(validationSpy.fieldValue).toEqual('any_value')
+    expect(validationSpy.fieldValue).toEqual(email)
   })
 
   test('Should call Validation with correct password', () => {
     const { sut, validationSpy } = makeSut()
     const passwordInput = sut.getByTestId('password-input') as HTMLInputElement
-    fireEvent.input(passwordInput, { target: { value: 'any_value' } })
+    const password = faker.internet.password()
+    fireEvent.input(passwordInput, { target: { value: password } })
     expect(validationSpy.fieldName).toEqual('password')
-    expect(validationSpy.fieldValue).toEqual('any_value')
+    expect(validationSpy.fieldValue).toEqual(password)
   })
 })
