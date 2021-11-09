@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import * as Yup from 'yup'
+
+import { Validation } from '@/presentation/protocols/validation'
 
 type FormContextType = {
   isLoading: boolean
@@ -8,11 +10,20 @@ type FormContextType = {
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>
   errors: { [key: string]: string }
   setErrors: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>
-  rules: Yup.ObjectSchema<any>
+  validationSchema: Yup.ObjectSchema<any>
+  fields: { [key: string]: any }
+  setFields: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
 }
 
 type FormContextProviderProps = {
-  rules: Yup.ObjectSchema<any>
+  validationSchema: Yup.ObjectSchema<any>
+  initialState: {
+    isLoading: boolean
+    errorMessage: string
+    errors: { [key: string]: string }
+    fields: { [key: string]: any }
+  }
+  validation: Validation
 }
 
 const FormContext = React.createContext<FormContextType>(undefined)
@@ -25,10 +36,11 @@ const useFormContext = (): FormContextType => {
   return context
 }
 
-const FormContextProvider: React.FC<FormContextProviderProps> = ({ children, rules }) => {
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [errorMessage, setErrorMessage] = React.useState('')
-  const [errors, setErrors] = React.useState<{ [key: string]: string }>({})
+const FormContextProvider: React.FC<FormContextProviderProps> = ({ children, validationSchema, initialState, validation }) => {
+  const [isLoading, setIsLoading] = React.useState(initialState.isLoading)
+  const [errorMessage, setErrorMessage] = React.useState(initialState.errorMessage)
+  const [errors, setErrors] = React.useState<{ [key: string]: string }>(initialState.errors)
+  const [fields, setFields] = React.useState<{ [key: string]: any }>(initialState.fields)
 
   const value = React.useMemo(() => {
     return {
@@ -38,9 +50,15 @@ const FormContextProvider: React.FC<FormContextProviderProps> = ({ children, rul
       setErrorMessage,
       errors,
       setErrors,
-      rules
+      validationSchema,
+      fields,
+      setFields
     }
   }, [isLoading, errorMessage, errors])
+
+  useEffect(() => {
+    validation.validate(fields)
+  }, [fields])
 
   return (
     <FormContext.Provider value={value}>

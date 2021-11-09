@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import * as Yup from 'yup'
+import React from 'react'
 
 import Styles from './input-styles.scss'
 import { useFormContext } from '../../contexts/form/form-context'
@@ -8,25 +7,22 @@ type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>
 
 const Input: React.FC<Props> = (props: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
-  const { errors, setErrors, rules } = useFormContext()
-
-  useEffect(() => {
-    try {
-      Yup.reach(rules, props.name)
-        .validateSync(inputRef?.current?.value)
-      setErrors(oldValue => ({ ...oldValue, [props.name]: undefined }))
-    } catch (error) {
-      setErrors(oldValue => ({ ...oldValue, [props.name]: error.message }))
-    }
-  }, [inputRef?.current?.value])
+  const { errors, fields, setFields } = useFormContext()
 
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
     event.target.readOnly = false
   }
 
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = event.target
+
+    setFields(oldValue => ({ ...oldValue, [name]: value }))
+  }
+
   return (
     <div className={Styles.inputWrap}>
-      <input ref={inputRef} {...props} readOnly onFocus={enableInput}/>
+      <input data-testid={`${props.name}-input`} ref={inputRef} {...props} readOnly onFocus={enableInput}
+             value={fields[props.name]} onChange={handleOnChange}/>
       {errors[props.name] &&
       <span data-testid={`${props.name}-status`} title={errors[props.name]} className={Styles.status}>🔴</span>}
     </div>
