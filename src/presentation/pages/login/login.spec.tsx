@@ -15,4 +15,18 @@ describe('Login component', () => {
     const submitButton = getByTestId('submit-button') as HTMLButtonElement
     expect(submitButton.disabled).toBe(true)
   })
+
+  test('Should email status input start with required error', () => {
+    const { queryByTestId } = render(<Login/>)
+    const emailStatus = queryByTestId('email-status')
+    expect(emailStatus.title).toBe('Campo obrigatório')
+    expect(emailStatus.textContent).toBe('🔴')
+  })
+
+  test('Should password status input start with required error', () => {
+    const { queryByTestId } = render(<Login/>)
+    const passwordStatus = queryByTestId('password-status')
+    expect(passwordStatus.title).toBe('Campo obrigatório')
+    expect(passwordStatus.textContent).toBe('🔴')
+  })
 })
