@@ -15,6 +15,7 @@ class ValidationSpy implements Validation {
   input: object
 
   validate (input: object): string | null {
+    console.log({ input })
     this.input = input
     return this.errorMessage
   }
@@ -55,14 +56,20 @@ describe('Login component', () => {
     expect(passwordStatus.textContent).toBe('🔴')
   })
 
-  test('Should call Validation with correct values', () => {
+  test('Should call Validation with correct email', () => {
     const { sut, validationSpy } = makeSut()
     const emailInput = sut.getByTestId('email-input') as HTMLInputElement
-    const passwordInput = sut.getByTestId('password-input') as HTMLInputElement
     fireEvent.input(emailInput, { target: { value: 'any_value' } })
+    expect(validationSpy.input).toEqual({
+      email: 'any_value'
+    })
+  })
+
+  test('Should call Validation with correct password', () => {
+    const { sut, validationSpy } = makeSut()
+    const passwordInput = sut.getByTestId('password-input') as HTMLInputElement
     fireEvent.input(passwordInput, { target: { value: 'any_value' } })
     expect(validationSpy.input).toEqual({
-      email: 'any_value',
       password: 'any_value'
     })
   })

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import * as Yup from 'yup'
 
 import { Validation } from '@/presentation/protocols/validation'
@@ -13,6 +13,7 @@ type FormContextType = {
   validationSchema: Yup.ObjectSchema<any>
   fields: { [key: string]: any }
   setFields: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  validation: Validation
 }
 
 type FormContextProviderProps = {
@@ -52,13 +53,10 @@ const FormContextProvider: React.FC<FormContextProviderProps> = ({ children, val
       setErrors,
       validationSchema,
       fields,
-      setFields
+      setFields,
+      validation
     }
   }, [isLoading, errorMessage, errors])
-
-  useEffect(() => {
-    validation.validate(fields)
-  }, [fields])
 
   return (
     <FormContext.Provider value={value}>
