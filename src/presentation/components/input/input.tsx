@@ -7,7 +7,7 @@ type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>
 
 const Input: React.FC<Props> = (props: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
-  const { errors, fields, setFields, validation } = useFormContext()
+  const { errors, fields, setFields, validation, setErrors } = useFormContext()
 
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
     event.target.readOnly = false
@@ -17,7 +17,9 @@ const Input: React.FC<Props> = (props: Props) => {
     const { name, value } = event.target
 
     setFields(oldValue => ({ ...oldValue, [name]: value }))
-    validation.validate(name, value)
+
+    const errorMessage = validation.validate(name, value)
+    setErrors(oldValue => ({ ...oldValue, [name]: errorMessage }))
   }
 
   return (
